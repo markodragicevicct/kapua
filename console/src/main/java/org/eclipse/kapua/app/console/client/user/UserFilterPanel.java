@@ -10,16 +10,19 @@
  *     Eurotech - initial API and implementation
  *
  *******************************************************************************/
-package org.eclipse.kapua.app.console.client.role;
+package org.eclipse.kapua.app.console.client.user;
 
 import org.eclipse.kapua.app.console.client.messages.ConsoleMessages;
 import org.eclipse.kapua.app.console.client.messages.ConsoleRoleMessages;
+import org.eclipse.kapua.app.console.client.messages.ConsoleUserMessages;
 import org.eclipse.kapua.app.console.client.ui.grid.EntityGrid;
 import org.eclipse.kapua.app.console.client.ui.panel.EntityFilterPanel;
 import org.eclipse.kapua.app.console.client.ui.view.EntityView;
 import org.eclipse.kapua.app.console.shared.model.GwtSession;
 import org.eclipse.kapua.app.console.shared.model.authorization.GwtRole;
 import org.eclipse.kapua.app.console.shared.model.authorization.GwtRoleQuery;
+import org.eclipse.kapua.app.console.shared.model.user.GwtUser;
+import org.eclipse.kapua.app.console.shared.model.user.GwtUserQuery;
 
 import com.extjs.gxt.ui.client.widget.Label;
 import com.extjs.gxt.ui.client.widget.VerticalPanel;
@@ -27,32 +30,32 @@ import com.extjs.gxt.ui.client.widget.form.TextField;
 import com.google.gwt.core.client.GWT;
 
 
-public class RoleFilterPanel extends EntityFilterPanel<GwtRole> {
+public class UserFilterPanel extends EntityFilterPanel<GwtUser> {
 
     private static final ConsoleMessages     MSGS      = GWT.create(ConsoleMessages.class);
-    private final static ConsoleRoleMessages ROLE_MSGS = GWT.create(ConsoleRoleMessages.class);
-    private final int                    WIDTH = 200;
+    private final static ConsoleUserMessages USER_MSGS = GWT.create(ConsoleUserMessages.class);
+    private final int                        WIDTH = 200;
     
-    private final EntityGrid<GwtRole> entityGrid;
+    private final EntityGrid<GwtUser> entityGrid;
     private final GwtSession currentSession;
 
     private final TextField<String> nameField;
     
-    public RoleFilterPanel(EntityView<GwtRole> entityView, GwtSession currentSession) {
+    public UserFilterPanel(EntityView<GwtUser> entityView, GwtSession currentSession) {
         super(entityView, currentSession);
         
         entityGrid = entityView.getEntityGrid(entityView, currentSession);
         this.currentSession = currentSession;
         
-        setHeading(ROLE_MSGS.filterHeader());
+        setHeading(USER_MSGS.filterHeader());
         
         VerticalPanel fieldsPanel = getFieldsPanel();
         
-        final Label roleNameLabel = new Label(ROLE_MSGS.filterFieldRoleNameLabel());
-        roleNameLabel.setWidth(WIDTH);
-        roleNameLabel.setStyleAttribute("margin", "5px");
+        final Label clientIdLabel = new Label(USER_MSGS.filterFieldUsernameLabel());
+        clientIdLabel.setWidth(WIDTH);
+        clientIdLabel.setStyleAttribute("margin", "5px");
 
-        fieldsPanel.add(roleNameLabel);
+        fieldsPanel.add(clientIdLabel);
 
         nameField = new TextField<String>();
         nameField.setName("name");
@@ -67,18 +70,17 @@ public class RoleFilterPanel extends EntityFilterPanel<GwtRole> {
     @Override
     public void resetFields() {
         nameField.setValue(null);
-        GwtRoleQuery query = new GwtRoleQuery();
+        GwtUserQuery query = new GwtUserQuery();
         query.setScopeId(currentSession.getSelectedAccount().getId());
         entityGrid.refresh(query);
     }
 
     @Override
     public void doFilter() {
-        GwtRoleQuery query = new GwtRoleQuery();
+        GwtUserQuery query = new GwtUserQuery();
         query.setName(nameField.getValue());            
         query.setScopeId(currentSession.getSelectedAccount().getId());
         entityGrid.refresh(query);
     }
-    
-    
+
 }
